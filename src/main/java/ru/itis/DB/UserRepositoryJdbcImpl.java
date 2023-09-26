@@ -1,10 +1,15 @@
 package ru.itis.DB;
 
+import ru.itis.models.Person;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
-public class UserRepositoryJdbcImpl implements UserRepository {
+public class UserRepositoryJdbcImpl implements UserRepository<Person> {
     private Connection connection;
     private Statement statement;
 
@@ -52,5 +57,24 @@ public class UserRepositoryJdbcImpl implements UserRepository {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public List<Person> findAll() {
+        List<Person> persons = new ArrayList<>();
+        try(ResultSet resultSet = statement.executeQuery("select * from person;");) {
+            while (resultSet.next()) {
+                Person person = Person.builder().build();
+
+                person.setId(resultSet.getLong("id"));
+                person.setNickname(resultSet.getString("nick_name"));
+                person.setEmail(resultSet.getString("email"));
+
+                persons.add(person);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return persons;
     }
 }
