@@ -19,8 +19,6 @@ public class RegistrationServlet extends HttpServlet {
     private static final String DB_USERNAME = "postgres";
     private static final String DB_PASSWORD = "lvbnhbq1989";
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/orismaven";
-    private Connection connection;
-    private Statement statement;
     private UserRepository userRepository;
 
     @Override
@@ -32,8 +30,8 @@ public class RegistrationServlet extends HttpServlet {
         }
 
         try {
-            connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-            statement = connection.createStatement();
+            Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+            Statement statement = connection.createStatement();
             userRepository = new UserRepositoryJdbcImpl(connection, statement);
         } catch (SQLException e) {
             e.printStackTrace();
