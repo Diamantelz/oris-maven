@@ -2,6 +2,7 @@ package ru.itis.servlets;
 
 import ru.itis.DB.UserRepository;
 import ru.itis.DB.UserRepositoryJdbcImpl;
+import ru.itis.models.Person;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +20,7 @@ public class LoginServlet extends HttpServlet {
     private static final String DB_USERNAME = "postgres";
     private static final String DB_PASSWORD = "lvbnhbq1989";
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/orismaven";
-    private UserRepository userRepository;
+    private UserRepository<Person> userRepository;
 
     @Override
     public void init() throws ServletException {
@@ -57,6 +58,7 @@ public class LoginServlet extends HttpServlet {
 
         if (userRepository.checkUser(email, password)) {
             System.out.println("successfully signed in");
+            response.sendRedirect("/users");
         } else {
             request.getRequestDispatcher("jsp/login.jsp").forward(request, response);
         }
