@@ -60,3 +60,24 @@
 .reg-title {
     margin-left: 10%;
 }
+
+.caption {
+    transform: scale(1.5);
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 5%;
+    width: 13em;
+}
+
+.caption-params {
+    font-weight: bold;
+}
+
+.block-about-me {
+
+}
+
+.prifile-columns {
+    margin-left: 5%;
+}
