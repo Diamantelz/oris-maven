@@ -1,19 +1,18 @@
 package ru.itis.servlets;
 
-import ru.itis.DB.UserRepository;
-import ru.itis.DB.UserRepositoryJdbcImpl;
+import ru.itis.repository.UserRepository;
+import ru.itis.repository.UserRepositoryJdbcImpl;
 import ru.itis.models.Person;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.UUID;
 
 @WebServlet(name = "LoginServlet", value = "/login")
 public class LoginServlet extends HttpServlet {
@@ -40,6 +39,20 @@ public class LoginServlet extends HttpServlet {
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        Cookie[] cookies = request.getCookies();
+//        for (Cookie cookie : cookies) {
+//            UUID uuid;
+//            if (!cookie.getName().equals("JSESSIONID")) {
+//                uuid = UUID.fromString(cookie.getValue());
+//                if (userRepository.checkUsersCookie(uuid)) {
+//                    request.getRequestDispatcher("jsp/profile.jsp").forward(request, response);
+//                } else {
+//                    request.getRequestDispatcher("jsp/login.jsp").forward(request, response);
+//                }
+//            } else {
+//                request.getRequestDispatcher("jsp/login.jsp").forward(request, response);
+//            }
+//        }
         request.getRequestDispatcher("jsp/login.jsp").forward(request, response);
     }
 
@@ -58,8 +71,20 @@ public class LoginServlet extends HttpServlet {
 
         if (userRepository.checkUser(email, password)) {
             System.out.println("successfully signed in");
-            response.sendRedirect("/users");
+
+            HttpSession httpSession = request.getSession(true);
+            httpSession.setAttribute("authenticated", true);
+
+//            UUID uuid = UUID.randomUUID();
+//            Cookie cookie = new Cookie("personCookie", uuid.toString());
+//            response.addCookie(cookie);
+//
+//            Long personId = userRepository.findIdByEmail(email);
+//            userRepository.saveCookie(personId, uuid);
+
+            response.sendRedirect("/profile");
         } else {
+            System.out.println("sign in denied. try again");
             request.getRequestDispatcher("jsp/login.jsp").forward(request, response);
         }
     }
