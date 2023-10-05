@@ -1,7 +1,7 @@
 package ru.itis.servlets;
 
-import ru.itis.DB.UserRepository;
-import ru.itis.DB.UserRepositoryJdbcImpl;
+import ru.itis.repository.UserRepository;
+import ru.itis.repository.UserRepositoryJdbcImpl;
 import ru.itis.models.Person;
 
 import javax.servlet.ServletException;
