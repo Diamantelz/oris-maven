@@ -1,5 +1,7 @@
 package ru.itis.servlets;
 
+import ru.itis.repository.CookieRepository;
+import ru.itis.repository.CookieRepositoryJdbcImpl;
 import ru.itis.repository.UserRepository;
 import ru.itis.repository.UserRepositoryJdbcImpl;
 import ru.itis.models.Person;
@@ -12,6 +14,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.UUID;
 
 @WebServlet(name = "LoginServlet", value = "/login")
@@ -20,6 +23,7 @@ public class LoginServlet extends HttpServlet {
     private static final String DB_PASSWORD = "lvbnhbq1989";
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/orismaven";
     private UserRepository<Person> userRepository;
+    private CookieRepository<Person> cookieRepository;
 
     @Override
     public void init() throws ServletException {
@@ -33,6 +37,7 @@ public class LoginServlet extends HttpServlet {
             Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
             Statement statement = connection.createStatement();
             userRepository = new UserRepositoryJdbcImpl(connection, statement);
+            cookieRepository = new CookieRepositoryJdbcImpl(connection, statement);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -40,15 +45,11 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        Cookie[] cookies = request.getCookies();
-//        for (Cookie cookie : cookies) {
-//            UUID uuid;
-//            if (!cookie.getName().equals("JSESSIONID")) {
-//                uuid = UUID.fromString(cookie.getValue());
-//                if (userRepository.checkUsersCookie(uuid)) {
-//                    request.getRequestDispatcher("jsp/profile.jsp").forward(request, response);
-//                } else {
-//                    request.getRequestDispatcher("jsp/login.jsp").forward(request, response);
-//                }
+//        List<String> cookieValues = cookieRepository.getAllCookies();
+//        for (int i = 0; i < cookies.length; i++) {
+//            if (cookieValues.contains(cookies[i].getValue())) {
+//                response.sendRedirect("/profile");
+//                return;
 //            } else {
 //                request.getRequestDispatcher("jsp/login.jsp").forward(request, response);
 //            }
@@ -80,7 +81,7 @@ public class LoginServlet extends HttpServlet {
 //            response.addCookie(cookie);
 //
 //            Long personId = userRepository.findIdByEmail(email);
-//            userRepository.saveCookie(personId, uuid);
+//            cookieRepository.saveCookie(personId, uuid);
 
             response.sendRedirect("/profile");
         } else {
