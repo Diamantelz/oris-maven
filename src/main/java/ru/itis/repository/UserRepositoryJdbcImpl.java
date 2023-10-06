@@ -80,19 +80,6 @@ public class UserRepositoryJdbcImpl implements UserRepository<Person> {
     }
 
     @Override
-    public void saveCookie(Long id, UUID uuid) {
-        if (id == null || uuid == null) {
-            return;
-        }
-        try {
-            statement.execute("insert into cookie(user_id, uuid) " +
-                    "values ('"+id+"', '"+uuid+"');");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public Long findIdByEmail(String email) {
         try {
             Statement statement = connection.createStatement();
@@ -105,43 +92,5 @@ public class UserRepositoryJdbcImpl implements UserRepository<Person> {
             e.printStackTrace();
         }
         return -1L;
-    }
-
-    @Override
-    public boolean checkUsersCookie(UUID uuid) {
-        if (uuid == null) {
-            return false;
-        }
-        try {
-            ResultSet resultSet = statement.executeQuery("select p.id from person p join cookie c " +
-                    "on p.id = c.user_id;");
-            while (resultSet.next()) {
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    @Override
-    public Person findUserByUUID(UUID uuid) {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select p.id, p.nick_name, p.email, p.password " +
-                    "from person p left join cookie c on c.user_id = p.id;");
-            while (resultSet.next()) {
-                return Person.builder()
-                        .id(resultSet.getLong("id"))
-                        .nickname(resultSet.getString("nickname"))
-                        .email(resultSet.getString("email"))
-                        .password(resultSet.getString("password"))
-                        .build();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }
